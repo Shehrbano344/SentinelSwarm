@@ -1,4 +1,3 @@
-// App.jsx - Updated with runtime API key configuration and approve/reject actions
 import { useState, useEffect, useMemo } from 'react';
 import './App.css';
 
@@ -143,7 +142,7 @@ function DashboardPage({ alerts, backendUp, fetchAlerts }) {
       <header className="topbar">
         <div>
           <h1>Alert Triage</h1>
-          <span className="topbar-sub">AI-generated severity classifications, reviewed by you</span>
+          <span className="topbar-sub">Live alert monitoring and triage</span>
         </div>
         <button className="refresh-btn" onClick={fetchAlerts}>⟳ Refresh</button>
       </header>
@@ -373,36 +372,48 @@ function SettingsPage({ refreshInterval, setRefreshInterval, backendUp }) {
         </div>
       </header>
       <main className="main">
-        <div className="settings-card">
-          <h3>Backend connection</h3>
-          <div className="settings-row"><span>API endpoint</span><span className="mono">{API_URL}</span></div>
-          <div className="settings-row"><span>Status</span><span className={`mono ${backendUp ? 'status-ok' : 'status-bad'}`}>{backendUp ? 'Connected' : 'Unreachable'}</span></div>
-        </div>
-
-        <div className="settings-card">
-          <h3>Refresh interval</h3>
-          <div className="settings-row">
-            <span>Auto-refresh every</span>
-            <select value={refreshInterval} onChange={(e) => setRefreshInterval(Number(e.target.value))}>
-              <option value={10000}>10 seconds</option>
-              <option value={15000}>15 seconds</option>
-              <option value={30000}>30 seconds</option>
-              <option value={60000}>60 seconds</option>
-            </select>
+        <div className="settings-grid">
+          <div className="settings-card">
+            <h3>Backend connection</h3>
+            <div className="settings-row"><span>API endpoint</span><span className="mono">{API_URL}</span></div>
+            <div className="settings-row"><span>Status</span><span className={`mono ${backendUp ? 'status-ok' : 'status-bad'}`}>{backendUp ? 'Connected' : 'Unreachable'}</span></div>
           </div>
-        </div>
 
-        <div className="settings-card">
-          <h3>AI reasoning</h3>
-          <div className="settings-row">
-            <span>Anthropic API key</span>
-            <input type="password" value={apiKey} onChange={(e) => setApiKey(e.target.value)} placeholder="Enter API key" />
-            <button className="save-btn" onClick={handleSave}>Save & Test</button>
+          <div className="settings-card">
+            <h3>Refresh interval</h3>
+            <div className="settings-row">
+              <span>Auto-refresh every</span>
+              <select value={refreshInterval} onChange={(e) => setRefreshInterval(Number(e.target.value))}>
+                <option value={10000}>10 seconds</option>
+                <option value={15000}>15 seconds</option>
+                <option value={30000}>30 seconds</option>
+                <option value={60000}>60 seconds</option>
+              </select>
+            </div>
           </div>
-          {msg && (
-            <div className={msg.type === 'success' ? 'msg-success' : 'msg-error'}>{msg.text}</div>
-          )}
-          <p className="settings-note">If a valid key is set, new alerts will be processed with live Claude reasoning. Existing alerts retain their stored traces.</p>
+
+          <div className="settings-card wide">
+            <h3>AI reasoning</h3>
+            <div className="settings-row">
+              <span>Anthropic API key</span>
+              <input type="password" value={apiKey} onChange={(e) => setApiKey(e.target.value)} placeholder="Enter API key" />
+              <button className="save-btn" onClick={handleSave}>Save & Test</button>
+            </div>
+            {msg && (
+              <div className={msg.type === 'success' ? 'msg-success' : 'msg-error'}>{msg.text}</div>
+            )}
+            <p className="settings-note">If a valid key is set, new alerts will be processed with live Claude reasoning. Existing alerts retain their stored traces.</p>
+          </div>
+
+          <div className="settings-card wide">
+            <h3>About SentinelSwarm</h3>
+            <p className="settings-note">
+              SentinelSwarm is an explainable AI triage agent for Security Operations Centers.
+              It ingests security alerts, enriches them with live threat intelligence, and produces
+              a structured, human-readable reasoning trace for every severity classification —
+              built as a modular foundation for a future multi-agent SOC platform.
+            </p>
+          </div>
         </div>
       </main>
     </>
